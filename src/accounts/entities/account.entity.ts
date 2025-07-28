@@ -11,7 +11,7 @@ export class Account {
   @Column('text', { unique: true })
   name: string;
 
-  @Column('int')
+  @Column('int', { default: 0 })
   balance: number;
 
   @OneToMany(() => Deposit, (deposit) => deposit)
@@ -23,6 +23,6 @@ export class Account {
   @OneToMany(() => Transfer, (transfer) => transfer)
   tranfers: Transfer[];
 
-  @Column('date')
+  @Column('date', { default: new Date() })
   createdAt: Date;
 }

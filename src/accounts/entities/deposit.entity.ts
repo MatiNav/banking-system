@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  Index,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Account } from './account.entity';
 
 @Entity('deposits')
@@ -12,8 +6,7 @@ export class Deposit {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Account)
-  @Index('deposit_account_index')
+  @ManyToOne(() => Account, (account) => account.deposits)
   account: Account;
 
   @Column('int')

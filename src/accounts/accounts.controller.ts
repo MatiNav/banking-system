@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dto/create-account.dto';
-import { UpdateAccountDto } from './dto/update-account.dto';
+import { CreateMovementDto } from './dto/create-movement.dto';
 
 @Controller('accounts')
 export class AccountsController {
@@ -20,23 +12,25 @@ export class AccountsController {
     return this.accountsService.create(createAccountDto);
   }
 
-  @Get()
-  findAll() {
-    return this.accountsService.findAll();
+  @Get(':accountId')
+  findOne(@Param('accountId') accountId: string) {
+    return this.accountsService.findOne(accountId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.accountsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAccountDto: UpdateAccountDto) {
-    return this.accountsService.update(+id, updateAccountDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.accountsService.remove(+id);
+  @Post('/:accountId/movements')
+  createMovement(
+    @Param('accountId') accountId: string,
+    @Body() createMovementDto: CreateMovementDto,
+  ) {
+    return this.accountsService.createMovement(accountId, createMovementDto);
   }
 }
+
+/**
+ * Get accounts/:id => get an account and its last 100 movements
+ * Delete accounts/:id
+ * Put accounts/:id => modifies its settings
+ *
+ * Post accounts/movements/
+ * (transfer, deposit / withdrawal)
+ */

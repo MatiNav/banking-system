@@ -12,7 +12,7 @@ export class Withdrawal {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Account)
+  @ManyToOne(() => Account, (account) => account.withdrawals)
   @Index('withdrawal_account_index')
   account: Account;
 

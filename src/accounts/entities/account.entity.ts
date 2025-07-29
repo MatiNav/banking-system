@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Check,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Deposit } from './deposit.entity';
 import { Transfer } from './transfer.entity';
 import { Withdrawal } from './withdrawal.entity';
@@ -11,18 +17,30 @@ export class Account {
   @Column('text', { unique: true })
   name: string;
 
-  @Column('int', { default: 0 })
+  @Column('float', { default: 0 })
+  @Check('balance >= 0')
   balance: number;
 
-  @OneToMany(() => Deposit, (deposit) => deposit)
+  @OneToMany(() => Deposit, (deposit) => deposit.account, {
+    cascade: true,
+  })
   deposits: Deposit[];
 
-  @OneToMany(() => Withdrawal, (withdrawal) => withdrawal)
+  @OneToMany(() => Withdrawal, (withdrawal) => withdrawal.account, {
+    cascade: true,
+  })
   withdrawals: Withdrawal[];
 
-  @OneToMany(() => Transfer, (transfer) => transfer)
-  tranfers: Transfer[];
+  @OneToMany(() => Transfer, (transfer) => transfer.accountTo, {
+    cascade: true,
+  })
+  transfersIn: Transfer[];
 
-  @Column('date', { default: new Date() })
+  @OneToMany(() => Transfer, (transfer) => transfer.accountFrom, {
+    cascade: true,
+  })
+  transfersOut: Transfer[];
+
+  @Column('date', { default: () => 'CURRENT_DATE' })
   createdAt: Date;
 }
